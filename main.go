@@ -1,21 +1,27 @@
 package main
 
 import (
+	"bytes"
+	_ "embed"
 	"flag"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
 )
 
+//go:embed fonts/FiraCode-Regular.ttf
+var embeddedFont []byte
+
 func main() {
 	filePath := flag.String("file", "", "Path to code file")
 	text := flag.String("text", "", "Raw code string")
 	lang := flag.String("lang", "", "Language for syntax highlighting (required, or inferred from --file)")
-	out := flag.String("out", "", "Output file (PNG). If omitted, defaults to ./screenshot.png")
+	out := flag.String("out", "", "Output file (PNG). If omitted, defaults to ./codeshot.png")
 	theme := flag.String("theme", "dracula", "Chroma theme")
-	font := flag.String("font", "FiraCode-Regular.ttf", "Font file (TTF)")
+	font := flag.String("font", "", "Font file (TTF, optional. Defaults to bundled FiraCode.)")
 	fontsize := flag.Float64("fontsize", 18, "Font size")
 
 	flag.Parse()
@@ -23,6 +29,7 @@ func main() {
 	var code string
 	var err error
 
+	// --- Handle input sources ---
 	if *filePath != "" {
 		data, err := ioutil.ReadFile(*filePath)
 		if err != nil {
@@ -30,14 +37,12 @@ func main() {
 			os.Exit(1)
 		}
 		code = string(data)
-		// Infer lang from file extension if not set
 		if *lang == "" {
 			*lang = InferLang(*filePath)
 		}
 	} else if *text != "" {
 		code = *text
 	} else {
-		// Try to read from stdin
 		stdinBytes, _ := ioutil.ReadAll(os.Stdin)
 		code = string(stdinBytes)
 		if strings.TrimSpace(code) == "" {
@@ -51,7 +56,30 @@ func main() {
 		os.Exit(1)
 	}
 
-	imgBytes, err := RenderCodeImage(code, *lang, *theme, *font, *fontsize)
+	// --- FONT RESOLUTION ---
+	fontPath := *font
+	useTempFont := false
+
+	if fontPath == "" {
+		// Write the embedded font to a temp file
+		tmp, err := ioutil.TempFile("", "codeshot-font-*.ttf")
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Failed to create temp font file: %v\n", err)
+			os.Exit(1)
+		}
+		if _, err := io.Copy(tmp, bytes.NewReader(embeddedFont)); err != nil {
+			fmt.Fprintf(os.Stderr, "Failed to write embedded font: %v\n", err)
+			os.Exit(1)
+		}
+		tmp.Close()
+		fontPath = tmp.Name()
+		useTempFont = true
+	}
+
+	imgBytes, err := RenderCodeImage(code, *lang, *theme, fontPath, *fontsize)
+	if useTempFont {
+		defer os.Remove(fontPath)
+	}
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Failed to render image: %v\n", err)
 		os.Exit(1)
