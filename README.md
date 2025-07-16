@@ -3,6 +3,9 @@
 **A CLI tool to turn your code into beautiful, shareable images—right from the command line.**  
 Perfect for docs, tweets, slides, bug reports, and more.
 
+<p align="center">
+<img src="./assets/codeshot.png" style="width: 60%;">
+</p>
 ---
 
 ## ✨ Features
