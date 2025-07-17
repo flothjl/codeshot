@@ -23,6 +23,8 @@ func BenchmarkRenderCodeImage(b *testing.B) {
 		{40},
 		{80},
 		{100},
+		{200},
+		{1000},
 	}
 	for _, bm := range codetests {
 		b.Run(fmt.Sprintf("%d_lines", bm.lines), func(b *testing.B) {

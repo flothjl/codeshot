@@ -4,7 +4,6 @@ go 1.24.5
 
 require (
 	github.com/alecthomas/chroma/v2 v2.19.0
-	github.com/atotto/clipboard v0.1.4
 	github.com/fogleman/gg v1.3.0
 )
 
