@@ -70,17 +70,25 @@ func RenderCodeImage(code, lang, theme, font string, fontsize float64) ([]byte, 
 		style = styles.Fallback
 	}
 
-	// Tokenize lines, preserving coloring
+	// --- Tokenize lines: split tokens only on \n ---
 	var lines [][]chroma.Token
 	var currentLine []chroma.Token
 	for token := iterator(); token != chroma.EOF; token = iterator() {
-		for _, char := range token.Value {
-			if char == '\n' {
-				lines = append(lines, currentLine)
-				currentLine = []chroma.Token{}
-			} else {
-				currentLine = append(currentLine, chroma.Token{Type: token.Type, Value: string(char)})
+		val := token.Value
+		for {
+			idx := strings.IndexByte(val, '\n')
+			if idx == -1 {
+				if val != "" {
+					currentLine = append(currentLine, chroma.Token{Type: token.Type, Value: val})
+				}
+				break
 			}
+			if idx > 0 {
+				currentLine = append(currentLine, chroma.Token{Type: token.Type, Value: val[:idx]})
+			}
+			lines = append(lines, currentLine)
+			currentLine = []chroma.Token{}
+			val = val[idx+1:]
 		}
 	}
 	if len(currentLine) > 0 {
