@@ -6,6 +6,7 @@ Perfect for docs, tweets, slides, bug reports, and more.
 <p align="center">
 <img src="./assets/codeshot.png" style="width: 60%;">
 </p>
+
 ---
 
 ## ✨ Features
@@ -106,7 +107,7 @@ Anything Chroma supports—Go, Python, JS, Rust, HTML, Bash, C, Lua, and over 10
 
 ## 🧩 Integration Examples
 
-- **With Neovim (codeshot.nvim):**  
+- **With Neovim ([codeshot.nvim](https://github.com/flothjl/codeshot.nvim)):**  
   Visually select code, run `:Codeshot` or `<leader>cs`, screenshot is auto-created!
 
 - **With VSCode:**  
