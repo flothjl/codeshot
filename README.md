@@ -100,7 +100,7 @@ codeshot --file foo.rs --font "/path/to/JetBrainsMono-Regular.ttf"
 - OneDark
 - Nord
 - Solarized Dark/Light
-- (and many more! See [Chroma Styles](https://xyproto.github.io/splash/docs/)
+- (and many more! See [Chroma Styles](https://xyproto.github.io/splash/docs/))
 
 ## 👾 Supported Languages
 
