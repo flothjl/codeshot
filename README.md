@@ -7,6 +7,9 @@ Perfect for docs, tweets, slides, bug reports, and more.
 <img src="./assets/codeshot.png" style="width: 60%;">
 </p>
 
+> [!NOTE]
+> Try codeshot with nvim! [codeshot.nvim](https://github.com/flothjl/codeshot.nvim)
+
 ---
 
 ## ✨ Features
